@@ -87,15 +87,6 @@ Tambem e possivel usar extensoes como Live Server no VS Code.
 4. Escolha a branch principal e a pasta `/root`.
 5. Salve e aguarde a URL publica ser gerada.
 
-## Capturas de Tela
-
-Adicione imagens do projeto publicado nesta secao:
-
-```md
-![Tela inicial](assets/images/screenshot-home.png)
-![Resultados](assets/images/screenshot-results.png)
-```
-
 ## Possiveis Melhorias Futuras
 
 - Integrar OpenRouteService para distancia por rota real.
@@ -107,4 +98,4 @@ Adicione imagens do projeto publicado nesta secao:
 
 ## Licenca
 
-Projeto academico para portfolio. Sugestao: publicar sob licenca MIT.
+Projeto academico para portfolio. 
