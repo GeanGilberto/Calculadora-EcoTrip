@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EcoTrip calcula e compara o impacto ambiental de viagens por diferentes meios de transporte.">
+  <title>EcoTrip | Calculadora de Impacto Ambiental</title>
+  <link rel="preconnect" href="https://nominatim.openstreetmap.org">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script type="module" src="js/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">Pular para a calculadora</a>
+
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Navegacao principal">
+      <a class="brand" href="#" aria-label="EcoTrip inicio">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span>
+          <strong>EcoTrip</strong>
+          <small>Viagens com menos impacto</small>
+        </span>
+      </a>
+
+      <button class="icon-button" type="button" id="themeToggle" aria-label="Alternar tema claro ou escuro" aria-pressed="false">
+        <span aria-hidden="true" id="themeIcon">T</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-section" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <p class="eyebrow">Calculadora ambiental de viagens</p>
+        <h1 id="heroTitle">Compare rotas e escolha transportes mais sustentaveis.</h1>
+        <p>
+          Informe origem e destino para estimar distancia, emissoes de CO2e por passageiro,
+          equivalencias ambientais e alternativas com menor impacto.
+        </p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <img src="assets/images/eco-route.svg" alt="">
+      </div>
+    </section>
+
+    <section class="calculator-layout" id="calculator" aria-label="Calculadora EcoTrip">
+      <form class="search-panel" id="tripForm" autocomplete="on">
+        <div class="section-heading">
+          <p class="eyebrow">Passo 1</p>
+          <h2>Dados da viagem</h2>
+        </div>
+
+        <div class="field-group">
+          <label for="originInput">Origem</label>
+          <input id="originInput" name="origin" type="text" placeholder="Ex.: Belo Horizonte, MG" required>
+        </div>
+
+        <div class="field-group">
+          <label for="destinationInput">Destino</label>
+          <input id="destinationInput" name="destination" type="text" placeholder="Ex.: Sao Paulo, SP" required>
+        </div>
+
+        <div class="field-group">
+          <label for="transportSelect">Meio de transporte principal</label>
+          <select id="transportSelect" name="transport">
+            <option value="plane">Aviao</option>
+            <option value="gasolineCar" selected>Carro gasolina</option>
+            <option value="electricCar">Carro eletrico</option>
+            <option value="bus">Onibus</option>
+            <option value="train">Trem</option>
+            <option value="motorcycle">Moto</option>
+            <option value="bicycle">Bicicleta</option>
+            <option value="walking">Caminhada</option>
+          </select>
+        </div>
+
+        <button class="primary-button" type="submit" id="calculateButton">
+          <span aria-hidden="true">+</span>
+          Calcular impacto
+        </button>
+
+        <p class="form-note">
+          A geocodificacao usa a API publica Nominatim. A distancia e calculada por Haversine.
+        </p>
+      </form>
+
+      <section class="results-panel" aria-labelledby="resultsTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Resultado</p>
+          <h2 id="resultsTitle">Impacto estimado</h2>
+        </div>
+
+        <div id="statusMessage" class="status-message" role="status" aria-live="polite">
+          Preencha os campos para calcular sua viagem.
+        </div>
+
+        <div class="metric-grid" id="metricGrid" hidden>
+          <article class="metric-card">
+            <span>Distancia</span>
+            <strong id="distanceMetric">0 km</strong>
+          </article>
+          <article class="metric-card">
+            <span>Emissao total</span>
+            <strong id="emissionMetric">0 kg CO2e</strong>
+          </article>
+          <article class="metric-card">
+            <span>Classificacao</span>
+            <strong id="classificationMetric">-</strong>
+          </article>
+          <article class="metric-card">
+            <span>Por passageiro</span>
+            <strong id="passengerMetric">0 kg CO2e</strong>
+          </article>
+        </div>
+
+        <div class="impact-band" id="impactBand" hidden>
+          <span id="impactDot" aria-hidden="true"></span>
+          <p id="impactText"></p>
+        </div>
+
+        <div class="equivalence-grid" id="equivalenceGrid" hidden>
+          <article>
+            <span>Arvores por ano</span>
+            <strong id="treesMetric">0</strong>
+          </article>
+          <article>
+            <span>Recargas de celular</span>
+            <strong id="chargesMetric">0</strong>
+          </article>
+        </div>
+
+        <div class="tips-box" id="tipsBox" hidden>
+          <h3>Dicas para reduzir impacto</h3>
+          <ul id="tipsList"></ul>
+        </div>
+
+        <button class="secondary-button" type="button" id="shareButton" hidden>
+          Compartilhar resultado
+        </button>
+      </section>
+    </section>
+
+    <section class="content-section" aria-labelledby="comparisonTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Comparativo</p>
+        <h2 id="comparisonTitle">Transportes ordenados por menor emissao</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Posicao</th>
+              <th scope="col">Transporte</th>
+              <th scope="col">Fator</th>
+              <th scope="col">Emissao estimada</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody">
+            <tr>
+              <td colspan="4">Calcule uma rota para visualizar o comparativo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="content-section ranking-section" aria-labelledby="rankingTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Ranking sustentavel</p>
+        <h2 id="rankingTitle">Top alternativas ecologicas</h2>
+      </div>
+      <div class="ranking-grid" id="rankingGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="content-section history-section" aria-labelledby="historyTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Historico local</p>
+        <h2 id="historyTitle">Ultimos calculos</h2>
+      </div>
+      <div class="history-actions">
+        <button class="text-button" type="button" id="clearHistoryButton">Remover historico</button>
+      </div>
+      <div id="historyList" class="history-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>EcoTrip - Projeto academico e portfolio front-end.</p>
+    <p>Estimativas educativas, nao substituem inventarios oficiais de carbono.</p>
+  </footer>
+</body>
+</html>
